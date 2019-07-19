@@ -1,0 +1,677 @@
+/*
+	Dusty CSS - Lightweight CSS library for quick responsive mobile-first design
+	Original author Hernanda Cahyo Kurniawan a.k.a hernandack
+	@hernandack (Twitter / IG / Github)
+	OpenSource project
+*/
+
+@import "mixins";
+
+$color-default : #efefef;
+$color-primary : #00796b;
+$color-success : #7cb342;
+$color-danger : #ef5350;
+$color-warning : #ffa726;
+$color-info : #ab47bc;
+$color-dark : #263238;
+$color-disabled : #d7ccc8;
+$color-white : #fff;
+$color-dark : invert($color-white);
+$color-link : desaturate($color-info, 20%);
+
+$padding-1 : .7em;
+$padding-2 : 1.4em;
+$padding-3 : 2.2em;
+$padding-4 : 3em;
+$base-padding : .7em;
+$base-border-rad : 4px;
+
+$button-size-sm : 1em;
+$button-size-md : 1.2em;
+$button-size-lg : 1.6em;
+
+$corner-rad : 4px;
+
+// color styles
+$color-styles : (default, primary, success, warning, danger, info, dark, disabled);
+$color-vars : ($color-default, $color-primary, $color-success, $color-warning, $color-danger, $color-info, $color-dark, $color-disabled);
+
+html, body, div, p, span, header, nav, footer, article, aside { display: block; margin: 0; padding: 0; font-family: "Lucida Sans", verdana; font-size: 14px; }
+
+* {
+	box-sizing: border-box;
+}
+
+a {
+	color: $color-link;
+	text-decoration: none;
+	
+	&:hover {
+		color: lighten($color-link, 20%);
+	}
+}
+p {
+	text-indent: 0;
+	line-height: 1.2em;
+	margin-bottom: 1em;
+}
+
+.button, a.button {
+	display: inline-block;
+	padding: $padding-1 $padding-2;
+	border: 1px solid darken($color-primary, 20%);
+	border-radius: $corner-rad;
+	font-weight: normal;
+	text-decoration: none;
+	
+	p, span {
+		color : $color-white;
+	}
+	
+	&.noborder { border: 0; }
+	
+	&:hover, &:active, &:focus {
+		background-color: desaturate($color-default, 30%);
+	}
+	
+	&:focus {
+		border-color: desaturate(invert($color-default), 80%);
+	}
+	
+	&.button-sm {
+		@include button-size($button-size-sm, 1em);
+	}
+	
+	&.button-md {
+		@include button-size($button-size-md, 1em);
+	}
+	
+	&.button-lg {
+		@include button-size($button-size-lg, 1.4em);
+	}
+	
+	@each $cstyle, $bgcol in (primary: $color-primary, default: $color-default, success: $color-success, warning: $color-warning, danger: $color-danger, info: $color-info, dark: $color-dark, disabled: $color-disabled) {
+		&.#{$cstyle} {
+			background-color: $bgcol;
+			border-color: darken($bgcol, 15%);
+			
+			@if $cstyle == default {
+				color: $color-dark;
+			} @elseif if $cstyle == disabled { 
+				color: lighten($color-disabled, 20%);
+			} @else {
+				color: $color-white;
+			}
+			&:hover, &:active, &:focus {
+				@if $cstyle == default or $cstyle == disabled {
+					background-color: darken($bgcol, 10%);
+				} @else {
+					background-color: lighten($bgcol, 10%);
+				}
+			}
+			
+			&:focus {
+				border-color: lighten($bgcol, 30%);
+			}
+			
+			&.outline {
+				background-color: transparent;
+				@if $cstyle == default {
+					color: $color-dark;
+				} @else {
+					color: $bgcol;
+				}
+				
+				&:hover, &:active, &:focus {
+					background-color: $bgcol;
+					@if $cstyle == default {
+						color: $color-dark;
+					} @else {
+						color: $color-white;
+					}
+				}
+				
+				&:focus {
+					border-color: lighten($bgcol, 30%);
+				}
+			}
+			
+			&-gradient {
+				background: $bgcol;
+				@if $cstyle == dark {
+					background: linear-gradient(lighten($bgcol, 30%), $bgcol);
+				} @else {
+					background: linear-gradient($bgcol, darken($bgcol, 25%));
+				}
+				
+				@if $cstyle == default {
+					color: $color-dark;
+				} @else {
+					color: $color-white;
+				}
+				
+				&:hover, &:active, &:focus {
+					@if $cstyle == dark {
+						background: linear-gradient(lighten($bgcol, 40%), lighten($bgcol, 20%));
+					} @else {
+						background: linear-gradient(lighten($bgcol, 10%), darken($bgcol, 10%));
+					}
+					
+					@if $cstyle == default {
+						color: $color-dark;
+					} @else {
+						color: $color-white;
+					}
+				}
+				
+				&:focus {
+					border-color: lighten($bgcol, 30%);
+				}
+			}
+		}
+	}
+}
+
+/* button group */
+.button-group {
+	display: block;
+	margin: 2px;
+	
+	* {
+		float: left;
+	}
+	
+	&.button-group-sm {
+		& > .button {
+			@include button-size($button-size-sm, .7em);
+		}
+	}
+	&.button-group-md {
+		& > .button {
+			@include button-size($button-size-md, 1em);
+		}
+	}
+	&.button-group-lg {
+		& > .button {
+			@include button-size($button-size-lg, 1.4em);
+		}
+	}
+	
+	& > .button {
+		margin: 0 !important;
+		border-radius: 0;
+		
+		&:first-child {
+			border-top-left-radius: $corner-rad;
+			border-bottom-left-radius: $corner-rad;
+		}
+		
+		&:last-child {
+			border-top-right-radius: $corner-rad;
+			border-bottom-right-radius: $corner-rad;
+		}
+	}
+	
+	@each $cstyle, $bgcol in (primary: $color-primary, default: $color-default, success: $color-success, warning: $color-warning, danger: $color-danger, info: $color-info, dark: $color-dark, disabled: $color-disabled) {
+		&.#{$cstyle} > .button {
+			background-color: $bgcol;
+			border-color: darken($bgcol, 15%);
+			
+			@if $cstyle == default {
+				color: $color-dark;
+			} @elseif if $cstyle == disabled { 
+				color: lighten($color-disabled, 20%);
+			} @else {
+				color: $color-white;
+			}
+			&:hover, &:active, &:focus {
+				background-color: lighten($bgcol, 10%);
+			}
+			
+			&:focus {
+				border-color: lighten($bgcol, 30%);
+			}
+		}
+	}
+	
+	&::after {
+		content: "";
+		clear: both;
+		display: block;
+	}
+}
+
+
+// image
+img {
+	max-width: 100%;
+	height: auto;
+}
+
+// card
+.card {
+	width: 100%;
+	display: block;
+	border: 1px solid $color-default;
+	overflow: hidden;
+	word-wrap: break-word;
+	background-clip: border-box;
+	
+	& img {
+		max-width: 100%;
+		height: auto;
+	}
+	
+	& > .card-image {
+		height: 300px;
+		overflow: hidden;
+		
+		&.cover {
+			background-repeat: no-repeat;
+			background-size: cover;
+		}
+		&.contain {
+			background-repeat: no-repeat;
+			background-size: contain;
+		}
+		&.full {
+			background-repeat: no-repeat;
+			background-size: 100% 100%;
+		}
+		&.stretch {
+			width: 100%;
+			height: 100%;
+		}
+	}
+	
+	& > .card-detail {
+		width: 100%;
+		height: auto;
+		display: block;
+		padding: $padding-1;
+	}
+}
+
+// lists
+ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	
+	& > li {
+		display: block;
+	}
+}
+
+// navigation
+.navbar {
+	display: block;
+	background-color: $color-default;
+	color: $color-dark;
+	
+	@each $cstyle, $bgcol in (primary: $color-primary, default: $color-default, dark: $color-dark) {
+		&-#{$cstyle} {
+			background-color: $bgcol;
+			@if $cstyle == default {
+				color: $color-dark;
+			} @else {
+				color: $color-white;
+			}
+		
+			& .navbar-brand, & ul > li a, & > a {
+				display: block;
+				background-color: $bgcol;
+				text-decoration: none;
+				padding: $padding-1;
+				
+				@if $cstyle == default {
+					color: $color-dark;
+				} @else {
+					color: $color-white;
+				}
+				
+				&:hover, &:active, &:focus {
+					@if $cstyle == default {
+						background-color: darken($bgcol, 20%);
+					} @else {
+						background-color: lighten($bgcol, 5%);
+					}
+				}
+			}
+			
+			&.divided {
+				& ul > li, & > a {
+					@if $cstyle == dark {
+						border-right: 1px solid lighten($bgcol, 20%);
+					} @else {
+						border-right: 1px solid darken($bgcol, 5%);
+					}
+				}
+			}
+			
+			&:after {
+				@include clearfix;
+			}
+		}
+	}
+}
+
+/* collapse */
+.collapse {
+	position: relative;
+	
+	.collapse-toggler {
+		position: absolute;
+		right: 0;
+		top: 0;
+		cursor: pointer;
+		
+		input {
+			cursor: pointer;
+			position: relative;
+			opacity: 0;
+			
+			&:checked {
+				& ~ .toggler {
+					background-color: $color-success;
+					transform: rotate(45deg);
+					transition: all 0.3s;
+				}
+				& ~ .collapse-content {
+					max-height: 100%;
+				}
+			}
+		}
+	}
+	
+	.toggler {
+		position: relative;
+		top: 0;
+		left: 0;
+		height: 1em;
+		width: 1em;
+		background-color: $color-default;
+		transition: all 0.2s;
+		
+		&:after {
+			content: "";
+			position: absolute;
+			display: none;
+		}
+	}
+	
+	& .toggler:after {
+		left: 9px;
+		top: 5px;
+		width: 5px;
+		height: 10px;
+		border: solid $color-white;
+		border-width: 0 3px 3px 0;
+		transform: rotate(45deg);
+		-webkit-transform: rotate(45deg);
+		-ms-transform: rotate(45deg);
+		-moz-transform: rotate(45deg);
+	}
+	
+	&:hover input ~ .toggler {
+		background-color: darken($color-default, 10%);
+	}
+	&:hover input:checked ~ .toggler{
+		background-color: $color-primary;
+	}
+	
+	& > .collapse-content {
+		max-height: 0;
+		overflow: hidden;
+	}
+	
+	&:after {
+		content: "";
+		clear: both;
+		display: block;
+	}
+}
+
+/* dropdown */
+.dropdown {
+	position: relative;
+	display: inline-block;
+	padding: ($padding-1/1) $padding-1;
+	
+	@each $cstyle, $bgcol in (primary: $color-primary, default: $color-default, dark: $color-dark) {
+		&.#{$cstyle} &-content {
+			@if  $cstyle == default {
+				color: $color-dark;
+			} @else {
+				color: $color-white;
+			}
+			display: none;
+			position: absolute;
+			background-color: $bgcol;
+			min-width: 160px;
+			z-index: 1;
+			box-shadow: 0 1px 4px $color-dark;
+			
+			& > a, & > ul > li > a {
+				display: block;
+				width: 100%;
+				padding: ($padding-1/1) $padding-1;
+				@if  $cstyle == default {
+					color: $color-dark;
+				} @else {
+					color: $color-white;
+				}
+				
+				&:hover, &:focus, &:active {
+					background-color: lighten($bgcol, 5%);
+				}
+			}
+			
+			& span.dropdown-separator {
+				display: block;
+				width: 100%;
+				height: 2px;
+				background-color: darken($bgcol, 10%);
+				padding: 0;
+				margin: 0;
+			}
+		}	
+	}
+	
+	&:hover &-content, &:focus &-content {
+		display: block;
+	}
+}
+
+// inputs
+.label-container {
+	display: inline-block;
+	position: relative;
+	padding: 0 $padding-3;
+	margin-bottom: $padding-2;
+	cursor: pointer;
+	user-select: none;
+	
+	input {
+		position: absolute;
+		opacity: 0;
+		cursor: pointer;
+		height: 0;
+		width: 0;
+		
+		// add primary bg color when checked
+		&:checked ~ .checkmark, &:checked ~ .optionmark {
+			background-color: $color-primary;
+			transform: rotate(45deg);
+			transition: all 0.3s;
+		}
+	}
+	
+	// set color on hover
+	&:hover input ~ .checkmark, &:hover input ~ .optionmark {
+		background-color: darken($color-default, 10%);
+	}
+	&:hover input:checked ~ .checkmark, &:hover input:checked ~ .optionmark {
+		background-color: $color-primary;
+	}
+	
+	// style the checkmark
+	& > .checkmark:after {
+		left: 9px;
+		top: 5px;
+		width: 5px;
+		height: 10px;
+		border: solid $color-white;
+		border-width: 0 3px 3px 0;
+		transform: rotate(45deg);
+		-webkit-transform: rotate(45deg);
+		-ms-transform: rotate(45deg);
+		-moz-transform: rotate(45deg);
+	}
+	// style the optionmark
+	& > .optionmark:after {
+		left: 9px;
+		top: 5px;
+		width: 5px;
+		height: 10px;
+		border: solid $color-white;
+		border-width: 0 3px 3px 0;
+		transform: rotate(45deg);
+		-webkit-transform: rotate(45deg);
+		-ms-transform: rotate(45deg);
+		-moz-transform: rotate(45deg);
+	}
+}
+/* custom checkbox */
+.checkmark {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 1.2em;
+	width: 1.2em;
+	background-color: $color-default;
+	transition: all 0.2s;
+	border: 2px solid darken($color-default,10%);
+	
+	&:after {
+		content: "";
+		position: absolute;
+		display: none;
+	}
+}
+/* custom radio */
+.optionmark {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 1.2em;
+	width: 1.2em;
+	background-color: $color-default;
+	transition: all 0.2s;
+	border-radius: 50%;
+	border: 2px solid darken($color-default,10%);
+	
+	&:after {
+		content: "";
+		position: absolute;
+		display: none;
+	}
+}
+
+
+
+/* paddings */
+@for $i from 0 through 4 {
+	.p-#{$i} {
+		padding: $base-padding * $i;
+	}
+	.pr-#{$i} {
+		padding-right: $base-padding * $i;
+	}
+	.pt-#{$i} {
+		padding-top: $base-padding * $i;
+	}
+	.pl-#{$i} {
+		padding-left: $base-padding * $i;
+	}
+	.pb-#{$i} {
+		padding-bottom: $base-padding * $i;
+	}
+}
+
+/* margins */
+@for $i from 0 through 4 {
+	.m-#{$i} {
+		margin: $base-padding * $i;
+	}
+	.mr-#{$i} {
+		margin-right: $base-padding * $i;
+	}
+	.mt-#{$i} {
+		margin-top: $base-padding * $i;
+	}
+	.ml-#{$i} {
+		margin-left: $base-padding * $i;
+	}
+	.mb-#{$i} {
+		margin-bottom: $base-padding * $i;
+	}
+}
+
+/* border */
+@for $i from 0 to 5 {
+	.border-#{$i} {
+		@include border-size(#{$i});
+	}
+	@each $side in (t,l,r,b) {
+		.border-#{$side}-#{$i} {
+			@include border-side-size(#{$side}, #{$i});
+		}
+	}
+}
+
+/* corner-radius */
+.round-full {
+	border-radius: 50%;
+}
+@for $i from 0 through 4 {
+	.round-#{$i} {
+		border-radius: $base-border-rad * $i;
+	}
+}
+
+/* grids */
+.row {
+	width: 100%;
+	height: auto;
+	padding: 0;
+	margin: 0;
+	
+	&:after {
+		@include clearfix;
+	}
+}
+@include media-default;
+
+/* color styles */
+@each $cstyle, $bgcol in (primary: $color-primary, default: $color-default, success: $color-success, warning: $color-warning, danger: $color-danger, info: $color-info, dark: $color-dark, disabled: $color-disabled) {
+	/* border color style */
+	.border-#{$cstyle} {
+		@include border-color($bgcol);
+	}
+	@each $side in (t,l,r,b) {
+		.border-#{$side}-#{$cstyle} {
+			@include border-side-color($side, $bgcol);
+		}
+	}
+	
+	/* backgrond color style */
+	.background-#{$cstyle} {
+		@include background-color($bgcol);
+	}
+	
+	/* text color style */
+	.text-#{$cstyle} {
+		@include text-color($bgcol);
+	}
+}
